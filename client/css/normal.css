@@ -1,0 +1,42 @@
+.main-box {
+  padding: 0px;
+  color: rgb(211, 211, 211);
+  background: #1e1e1e;
+}
+
+.second-box {
+  background: #1e1e1e;
+  padding: 21.9px;
+}
+
+.side-box {
+  background: #1e1e1e;
+  width: 20%;
+  margin-top: 12px;
+  height: 650px;
+}
+
+.input-p {
+  background: #252526; 
+  color: white; 
+  outline: none; 
+  border: none;
+  border-radius: 0px;
+}
+
+.label-column {
+  color: white; 
+  background: #202022;
+  height: 38px; 
+  border-radius: 2px;
+}
+
+body {
+  background: #141414;
+  margin: 0%;
+  height: 100%;
+}
+
+html, body {
+  font-family: 'Roboto';
+}

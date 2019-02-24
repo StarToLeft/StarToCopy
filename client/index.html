@@ -1,0 +1,205 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+      name="viewport"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>LearnCodeIt.io</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <link rel="stylesheet" href="./css/skeleton.css" />
+    <link rel="stylesheet" href="./css/normal.css" />
+  </head>
+
+  <body>
+    <div class="container" style="background: #111111; padding-left: 20px; padding-right: 20px; padding-bottom: 14px;">
+      <div class=" main-box" style="border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">
+        <div class="" style="height: 78px;">
+          <h4 style="text-align: center; padding-top: 18px;">StarToCopy</h4>
+        </div>
+      </div>
+
+      <div class="" style="margin-top: 15px;">
+        <div class="row">
+          <div class="five columns">
+            <div class="row">
+              <div class="four columns label-column">
+                <p style="text-align: center; margin-top: 8px;">Expires in:</p>
+              </div>
+              <div class="eight columns">
+                <select class="u-full-width input-p" id="expires">
+                  <option value="never">Never</option>
+                  <option value="one-month">1 Month</option>
+                  <option value="one-week">1 Week</option>
+                  <option value="one-day">1 Day</option>
+                  <option value="12-hours">12 Hours</option>
+                  <option value="5-hours">5 Hours</option>
+                  <option value="1-hour">1 Hour</option>
+                  <option value="one-week">10 Min</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="two columns">
+            <button style="width: 100%; color: white">Light</button>
+          </div>
+          <div class="five columns" style="float: right;">
+            <div class="row">
+              <div class="four columns label-column">
+                <p style="text-align: center; margin-top: 8px;">Language:</p>
+              </div>
+              <div class="eight columns">
+                <select class="u-full-width input-p" id="language_select">
+                  <option value="javascript">Autodetect</option>
+                  <option value="javascript">javascript</option>
+                  <option value="apex">apex</option>
+                  <option value="azcli">azcli</option>
+                  <option value="bat">bat</option>
+                  <option value="clojure">clojure</option>
+                  <option value="coffee script">coffeescript</option>
+                  <option value="cpp">cpp</option>
+                  <option value="csharp">csharp</option>
+                  <option value="csp">csp</option>
+                  <option value="dockerfile">dockerfile</option>
+                  <option value="fsharp">fsharp</option>
+                  <option value="go">go</option>
+                  <option value="graphql">graphql</option>
+                  <option value="handlebars">handlebars</option>
+                  <option value="html">html</option>
+                  <option value="ini">ini</option>
+                  <option value="java">java</option>
+                  <option value="lua">lua</option>
+                  <option value="markdown">markdown</option>
+                  <option value="msdax">msdax</option>
+                  <option value="mysql">mysql</option>
+                  <option value="objective-c">objective-c</option>
+                  <option value="pgsql">pgsql</option>
+                  <option value="php">php</option>
+                  <option value="postiats">postiats</option>
+                  <option value="powershell">powershell</option>
+                  <option value="pug">pug</option>
+                  <option value="python">python</option>
+                  <option value="r">r</option>
+                  <option value="razor">razor</option>
+                  <option value="ruby">ruby</option>
+                  <option value="rust">rust</option>
+                  <option value="scheme">scheme</option>
+                  <option value="solidity">solidity</option>
+                  <option value="sql">sql</option>
+                  <option value="st">st</option>
+                  <option value="swift">swift</option>
+                  <option value="typescript">typescript</option>
+                  <option value="vb">vb</option>
+                  <option value="xml">xml</option>
+                  <option value="yaml">yaml</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class=""
+        id="container"
+        style="background: #202022; height:650px; margin-bottom: 15px;">
+      </div>
+
+      <div class="second-box" style="border-radius: 5px;">
+        <button class="button u-full-width" style="color: rgb(231, 228, 228);">Create Paste</button>
+        <br>
+        <p style="color: white;">&copy; <a href="">StarToLeft</a> 2019</p>
+      </div>
+    </div>
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script>
+      require.config({
+        paths: {
+          vs: "../node_modules/monaco-editor/min/vs"
+        }
+      });
+
+      require(["vs/editor/editor.main"], function() {
+        window.editor = monaco.editor.create(
+          document.getElementById("container"),
+          {
+            value: [
+              "displayWelcomeMessage();",
+              "",
+              "function displayWelcomeMessage() {",
+              '\tconsole.log("Welcome!");',
+              "}"
+            ].join("\n"),
+            language: "javascript"
+          }
+        );
+      });
+
+      var interval = setInterval(() => {
+        if (typeof window.editor !== "undefined") onEditor();
+      }, 200);
+
+      //Events
+
+      function onEditor() {
+        clearInterval(interval);
+
+        const socket = io("http://localhost:3000");
+
+        monaco.editor.setTheme("vs-dark");
+
+        socket.on("connect", function() {
+          console.log(
+            "%c Connected to server.",
+            "color:green; font-weight: bold; font-size: 12px;"
+          );
+
+          monaco.editor.setModelLanguage(editor.getModel(), "javascript");
+        });
+
+        socket.on("disconnect", function() {
+          console.log(
+            "%c Disconnected from server.",
+            "color:red; font-weight: bold; font-size: 12px;"
+          );
+        });
+
+        socket.on("error", function(e) {
+          console.log("System", e ? e : "A unknown error occurred");
+        });
+      }
+
+      function onSave() {}
+
+      $(document).ready(function() {
+        $("#language_select").change(function() {
+          var selectedLanguage = $(this)
+            .children("option:selected")
+            .val();
+          monaco.editor.setModelLanguage(editor.getModel(), selectedLanguage);
+        });
+      });
+
+      // prevent defaults
+      $(document).bind("keydown", function(e) {
+        if (e.ctrlKey && e.which == 83) {
+          e.preventDefault();
+          onSave();
+          return false;
+        }
+      });
+    </script>
+  </body>
+</html>
